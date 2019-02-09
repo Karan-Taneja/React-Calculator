@@ -1,14 +1,85 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import 'mathjs';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { Component } from 'react';
+import Buttons from './components/buttons';
+import Display from './components/display';
+import math from 'mathjs';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+class App extends Component {
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  constructor(props){
+    super(props);
+
+    this.state = {
+      display: "0",
+      currentOps: [],
+      previousVal: undefined,
+      clear: 'AC'
+    }
+
+  }
+
+  onClick = e => {
+    
+    const value = e.target.value;
+    const clear = this.state.clear;
+    let ops = [...this.state.currentOps];
+    const last = ops.length-1
+
+    const functions = {"AC":true,"C":true,}
+    const operators = {'+':true,'-':true,'*':true,'/':true,}
+    const assignment = {"=":true,};
+    const digits = {'0':true, '1':true, '2':true, '3':true, '4':true, 
+                    '5':true, '6':true, '7':true,'8':true,'9':true,};
+    const decimal = {'.':true};
+    const toggle = {'* -1': true, '/ 100': true}
+
+    if(functions[value]){
+      if(clear === 'AC'){
+        this.setState({
+            display: "0",
+            currentOps:[],
+            previousVal: null,
+        })
+      }
+      else{
+        if(ops.length === 1){
+          this.setState({display: "0", currentOps:[], clear: 'AC'})
+        }
+        else if(ops.length === 2){
+          if(this.state.previousVal !== null){
+            const newOps = [this.state.display, ops[1]]
+            this.setState({previousVal:this.state.display, display: "0", currentOps:newOps, clear: 'AC'});
+          }
+          else{
+            const newOps = [ops[0], null]
+            this.setState({currentOps:newOps, clear: 'AC'})
+          }
+        }
+        else if(ops.length === 3){
+          const newOps = [ops[0], ops[1]]
+          this.setState({display:"0", currentOps:newOps, clear: 'AC'})
+        }
+        else{
+          console.log('Something went wrong')
+        }
+      }
+    }
+
+  }
+
+  render() {
+    return (
+      <>
+        <div className="wholePage" onKeyDown={this.onKeyDown}>
+          <div className="flex-container row justify-content-center holder">
+          <div className="calculator col-10 col-sm-6 col-lg-4 col-xl-4">
+            <Display value={this.state.display}/>
+            <Buttons clear={this.state.clear} onClick={this.onClick} />
+          </div>
+        </div>
+        </div>
+      </>)
+  }
+
+}
+
+export default App;
