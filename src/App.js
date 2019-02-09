@@ -63,6 +63,47 @@ class App extends Component {
         }
       }
     }
+    else if(digits[value]){
+      if(value !== "0"){
+        this.setState({clear:'C'})
+      }
+      if(ops[1] === null){
+        this.setState({display: value, currentOps: [value]})
+      }
+      else{
+        if(isNaN(ops[last])){
+          ops.push(value)
+          this.setState({display:value, currentOps:ops})
+        }
+        else{
+          if(ops[last] === "0"){
+            ops[last]=value
+            this.setState({display:ops[last], currentOps:ops})
+          }
+          else{
+            ops[last]+=value
+            this.setState({display:ops[last], currentOps:ops})
+          }
+        }
+      }
+    }
+    else if(decimal[value]){
+      this.setState({clear:'C'})
+      if(isNaN(ops[last])){
+        ops.push("0.")
+        this.setState({display:"0.", currentOps:ops})
+      }
+      else{
+        if(ops[last].includes('.')) return;
+        else{
+          ops[last]+=value
+          this.setState({display:ops[last], currentOps:ops})
+        }
+      }
+    }
+    else{
+      console.log('Something went wrong.')
+    }
 
   }
 
