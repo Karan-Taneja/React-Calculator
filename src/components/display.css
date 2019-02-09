@@ -1,0 +1,19 @@
+.display {
+  background-color: #53545d;
+  font-size: 5vw;
+  font-weight:100;
+  color: white;
+  outline: none;
+  border: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  min-height: 70px;
+  text-align: right;
+  padding-right: 20px;
+}
+
+::placeholder{
+  color: white;
+  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 100;
+}
