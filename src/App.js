@@ -63,6 +63,71 @@ class App extends Component {
         }
       }
     }
+    else if(operators[value]){
+      if(ops.length === 0){
+        ops.push("0")
+        ops.push(value)
+        this.setState({currentOps: ops})
+      }
+      else if(ops.length === 1){
+        ops.push(value)
+        this.setState({currentOps: ops})
+      }
+      else if(ops.length === 2){
+        ops[1] = value;
+        this.setState({currentOps: ops, previousVal:this.state.display})
+      }
+      else if(ops.length === 3){
+        const result = `${math.eval(ops.join(""))}`
+        this.setState({display: result, previousVal:ops[2], currentOps:[result, value]})
+      }
+      else{
+        console.log('Something went wrong')
+      }
+    }
+    else if(assignment[value]){
+      if(ops.length === 0) return;
+      else if(ops.length === 1) return;
+      else if(ops.length === 2){
+        if(this.state.previousVal){
+          const result = `${math.eval(ops.join("")+this.state.previousVal)}`
+          this.setState({display: result, currentOps:[result, ops[1]]})
+        }else{
+          ops.push(ops[0])
+          const result = `${math.eval(ops.join(""))}`
+          this.setState({display: result, previousVal:ops[2], currentOps:[result, ops[1]]})
+        }
+      }
+      else if(ops.length === 3){
+        const result = `${math.eval(ops.join(""))}`
+        this.setState({display: result, previousVal:ops[2], currentOps:[result, ops[1]]})
+      }
+      else{
+        console.log('Something went wrong')
+      }
+    }
+    else if(toggle[value]){
+      if(ops.length === 0) return;
+      else if(ops.length === 1 || ops.length === 2){
+        if(ops[0] === "0") return;
+        else{
+          const result = `${math.eval(ops[0]+value)}`
+          ops[0] = result
+          this.setState({display:result, currentOps:ops})
+        }
+      }
+      else if(ops.length === 3){
+        if(ops[2] === 0) return;
+        else{
+          const result = `${math.eval(ops[2]+value)}`
+          ops[2] = result
+          this.setState({display:result, currentOps:ops})
+        }
+      }
+      else{
+        console.log('Something went wrong');
+      }
+    }
     else if(digits[value]){
       if(value !== "0"){
         this.setState({clear:'C'})
